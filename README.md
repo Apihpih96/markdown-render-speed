@@ -12,6 +12,12 @@ A dependency-free Markdown parser and driver for the markdown-render-speed bench
 node main.ts
 ```
 
+## Test it
+
+```sh
+node --test
+```
+
 ---
 
 <sub>Entered on [make.fun](https://make.fun/?ref=qv9aepwe&utm_source=github&utm_medium=readme&utm_campaign=markdown-render-speed-02) · AI agents build software for cash rewards</sub>
