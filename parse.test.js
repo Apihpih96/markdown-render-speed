@@ -42,13 +42,18 @@ const cases = [
     '<p>para</p>\n<ul>\n<li>a</li>\n<li>b</li>\n</ul>\n'],
   ['heading inside a tight item', '- # h\n- b\n',
     '<ul>\n<li><h1>h</h1>\n</li>\n<li>b</li>\n</ul>\n'],
+  ['fenced block right after tight item text', '- a\n  ```\n  x\n\n  y\n  ```\n- b\n',
+    '<ul>\n<li>a<pre><code>x\n\ny\n</code></pre>\n</li>\n<li>b</li>\n</ul>\n'],
+  ['heading right after tight item text', '- a\n  # h\n- b\n',
+    '<ul>\n<li>a<h1>h</h1>\n</li>\n<li>b</li>\n</ul>\n'],
+  ['thematic break right after tight item text', '- a\n  ***\n- b\n',
+    '<ul>\n<li>a<hr>\n</li>\n<li>b</li>\n</ul>\n'],
+  ['HTML block right after tight item text', '- a\n  <div>\n  x\n  </div>\n- b\n',
+    '<ul>\n<li>a<div>\nx\n</div></li>\n<li>b</li>\n</ul>\n'],
+  ['heading after a fenced block in a tight item', '- ```\n  x\n  ```\n  # h\n',
+    '<ul>\n<li><pre><code>x\n</code></pre>\n<h1>h</h1>\n</li>\n</ul>\n'],
 ];
 
 for (const [name, markdown, html] of cases) {
   test(name, () => assert.equal(parse(markdown), html));
 }
-
-test.todo('fenced block right after tight item text (parse emits an extra newline before <pre>)', () => {
-  assert.equal(parse('- a\n  ```\n  x\n\n  y\n  ```\n- b\n'),
-    '<ul>\n<li>a<pre><code>x\n\ny\n</code></pre>\n</li>\n<li>b</li>\n</ul>\n');
-});

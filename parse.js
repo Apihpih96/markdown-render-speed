@@ -163,9 +163,9 @@ export function parse(markdown) {
       out+=`<${tag}${ordered&&start!==1?` start="${start}"`:''}>\n`;
       for(const it of items){
         let body=render(it.sub,depth+1).trimEnd();
-        if(!loose){if(!body.startsWith('<blockquote>'))body=body.replace(/^<p>([\s\S]*?)<\/p>/,'$1');body=body.replace(/(<\/h[1-6]>\n)<p>([\s\S]*?)<\/p>/,'$1$2');body=body.replace(/\n(<(?:ul|ol|blockquote)>)/,'$1');if(/<\/(?:ul|ol|blockquote)>$/.test(body)||body.startsWith('<blockquote>'))body+='\n';if(/^<h[1-6]>[\s\S]*<\/h[1-6]>$/.test(body))body+='\n';}
+        if(!loose){let lead=false;if(!body.startsWith('<blockquote>'))body=body.replace(/^<p>([\s\S]*?)<\/p>\n?/,(_,t)=>{lead=true;return t;});body=body.replace(/(<\/h[1-6]>\n)<p>([\s\S]*?)<\/p>/,'$1$2');if(!lead)body=body.replace(/\n(<(?:ul|ol|blockquote)>)/,'$1');if(/<\/(?:ul|ol|blockquote)>$/.test(body)||body.startsWith('<blockquote>'))body+='\n';if(/<\/h[1-6]>$/.test(body))body+='\n';}
         else if(body)body+='\n';
-        if(!loose&&(body==='<hr>'||body.startsWith('<pre>')||body.endsWith('</pre>')))body+='\n';
+        if(!loose&&!body.endsWith('\n')&&(body.endsWith('<hr>')||body.startsWith('<pre>')||body.endsWith('</pre>')))body+='\n';
         const box=it.task?`<input${it.checked?' checked=""':''} disabled="" type="checkbox"> `:'';
         if(box&&body.startsWith('<p>'))body='<p>'+box+body.slice(3);
         else if(box)body=box+body;
