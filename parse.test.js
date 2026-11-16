@@ -52,6 +52,10 @@ const cases = [
     '<ul>\n<li>a<div>\nx\n</div></li>\n<li>b</li>\n</ul>\n'],
   ['heading after a fenced block in a tight item', '- ```\n  x\n  ```\n  # h\n',
     '<ul>\n<li><pre><code>x\n</code></pre>\n<h1>h</h1>\n</li>\n</ul>\n'],
+  ['raw HTML block at the start of a tight item is not unwrapped', '- <p>a</p>\n  b\n',
+    '<ul>\n<li><p>a</p>\nb</li>\n</ul>\n'],
+  ['inline HTML at the end of tight item text gets no trailing newline', '- a <hr>\n- b <h1>c</h1>\n',
+    '<ul>\n<li>a <hr></li>\n<li>b <h1>c</h1></li>\n</ul>\n'],
 ];
 
 for (const [name, markdown, html] of cases) {
