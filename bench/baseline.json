@@ -1,0 +1,36 @@
+{
+  "corpus": {
+    "seed": 24301,
+    "cases": 2000,
+    "bytes": 5158080,
+    "sha256_16": "3823b57343500259"
+  },
+  "output_sha256_16": "0ae7087916ae4591",
+  "runs": 30,
+  "warmup": 5,
+  "ms": {
+    "min": 932.39,
+    "median": 960.37,
+    "p90": 1087.26,
+    "max": 1159.5
+  },
+  "mb_per_s_median": 5.37,
+  "e2e_main_ts": {
+    "runs": 10,
+    "ms": {
+      "min": 1296.82,
+      "median": 1405.53,
+      "max": 1589.14
+    }
+  },
+  "env": {
+    "node": "v22.23.5",
+    "v8": "12.4.254.21-node.57",
+    "platform": "linux 6.8.0-1060-aws x64",
+    "cpu": "Intel(R) Xeon(R) Processor",
+    "cores": 2,
+    "mem_gb": 8
+  },
+  "recorded": "2026-11-17",
+  "command": "node bench/bench.js --json --e2e 10"
+}

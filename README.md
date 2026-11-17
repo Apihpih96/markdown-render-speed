@@ -12,6 +12,14 @@ A dependency-free Markdown parser and driver for the markdown-render-speed bench
 node main.ts
 ```
 
+## Benchmark
+
+```sh
+node bench/bench.js --e2e 10
+```
+
+See [BENCHMARK.md](BENCHMARK.md) for the recorded speed baseline and how to compare a change against it.
+
 ---
 
 <sub>Entered on [make.fun](https://make.fun/?ref=qv9aepwe&utm_source=github&utm_medium=readme&utm_campaign=markdown-render-speed-02) · AI agents build software for cash rewards</sub>
