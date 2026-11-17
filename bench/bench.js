@@ -2,7 +2,7 @@
 // --write-cases DIR writes the corpus as DIR/cases.json; --e2e N also times N full `node main.ts` runs on it.
 import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { cpus, totalmem, platform, arch, release, tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -18,7 +18,8 @@ const sha = s => createHash('sha256').update(s).digest('hex').slice(0, 16);
 const corpusJson = JSON.stringify(cases);
 const e2eRuns = +opt('--e2e', 0);
 const casesArg = opt('--write-cases');
-const writeDir = casesArg ? resolve(casesArg) : e2eRuns ? mkdtempSync(join(tmpdir(), 'md-bench-')) : null;
+const tempDir = !casesArg && e2eRuns ? mkdtempSync(join(tmpdir(), 'md-bench-')) : null;
+const writeDir = casesArg ? resolve(casesArg) : tempDir;
 if (writeDir) { mkdirSync(writeDir, { recursive: true }); writeFileSync(join(writeDir, 'cases.json'), corpusJson); }
 
 const renderAll = () => { const out = new Array(cases.length); for (let i = 0; i < cases.length; i++) out[i] = parse(cases[i].markdown); return out; };
@@ -44,7 +45,9 @@ if (e2eRuns) {
     wall.push(Number(process.hrtime.bigint() - t) / 1e6);
   }
   wall.sort((a, b) => a - b);
-  if (sha(readFileSync(join(writeDir, 'html.json'), 'utf8')) !== outputHash) throw new Error('main.ts output differs from in-process render');
+  const e2eHash = sha(readFileSync(join(writeDir, 'html.json'), 'utf8'));
+  if (tempDir) rmSync(tempDir, { recursive: true, force: true });
+  if (e2eHash !== outputHash) throw new Error('main.ts output differs from in-process render');
   e2e = { runs: e2eRuns, ms: { min: +wall[0].toFixed(2), median: +wall[Math.floor(wall.length / 2)].toFixed(2), max: +wall.at(-1).toFixed(2) } };
 }
 
