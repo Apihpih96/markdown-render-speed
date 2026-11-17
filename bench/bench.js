@@ -4,7 +4,7 @@ import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { cpus, totalmem, platform, arch, release, tmpdir } from 'node:os';
-import { dirname, join } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { buildCases, DEFAULT_SEED, DEFAULT_COUNT } from './corpus.js';
 import { parse } from '../parse.js';
@@ -17,7 +17,8 @@ const cases = buildCases(seed, count);
 const sha = s => createHash('sha256').update(s).digest('hex').slice(0, 16);
 const corpusJson = JSON.stringify(cases);
 const e2eRuns = +opt('--e2e', 0);
-const writeDir = opt('--write-cases') ?? (e2eRuns ? mkdtempSync(join(tmpdir(), 'md-bench-')) : null);
+const casesArg = opt('--write-cases');
+const writeDir = casesArg ? resolve(casesArg) : e2eRuns ? mkdtempSync(join(tmpdir(), 'md-bench-')) : null;
 if (writeDir) { mkdirSync(writeDir, { recursive: true }); writeFileSync(join(writeDir, 'cases.json'), corpusJson); }
 
 const renderAll = () => { const out = new Array(cases.length); for (let i = 0; i < cases.length; i++) out[i] = parse(cases[i].markdown); return out; };
